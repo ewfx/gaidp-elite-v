@@ -203,3 +203,50 @@ def hello():
 
 if __name__ == '__main__':  
     app.run(debug=True)  
+	
+	----------------------------------------------------
+	
+	import fitz  # PyMuPDF for extracting text from PDF
+import re
+
+def extract_text_from_pdf(pdf_path):
+    """Extract text from the given PDF file."""
+    doc = fitz.open(pdf_path)
+    text = "\n".join([page.get_text("text") for page in doc])
+    return text
+
+def extract_rules(text):
+    """Extract rules from the text using regex or specific parsing logic."""
+    rules = []
+    pattern = re.compile(r"Rule\s*\d+:\s*(.*?)\n", re.IGNORECASE)
+    
+    for match in pattern.finditer(text):
+        rules.append(match.group(1))
+    
+    return rules
+
+def validate_input(input_data, rules):
+    """Validate the input data against the extracted rules."""
+    violations = []
+    
+    for rule in rules:
+        if re.search(rule, input_data, re.IGNORECASE):
+            violations.append(rule)
+    
+    return violations
+
+# Example usage
+pdf_path = "rules.pdf"  # Provide the correct PDF file path
+pdf_text = extract_text_from_pdf(pdf_path)
+rules = extract_rules(pdf_text)
+
+# Sample input data (modify based on your requirement)
+input_data = "Customer ID: 12345"
+violations = validate_input(input_data, rules)
+
+if violations:
+    print("Rule violations found:")
+    for violation in violations:
+        print(f"- {violation}")
+else:
+    print("No rule violations detected.")
