@@ -250,3 +250,64 @@ if violations:
         print(f"- {violation}")
 else:
     print("No rule violations detected.")
+
+    -------------------------------
+
+
+    import fitz  # PyMuPDF for extracting text from PDF
+import re
+
+def extract_text_from_pdf(pdf_path):
+    """Extract text from the given PDF file."""
+    doc = fitz.open(pdf_path)
+    text = "\n".join([page.get_text("text") for page in doc])
+    return text
+
+def extract_rules(text):
+    """Extract rules from the text using regex or specific parsing logic."""
+    rules = {}
+    pattern = re.compile(r"Rule\s*(\d+):\s*(.*?)\n", re.IGNORECASE)
+    
+    for match in pattern.finditer(text):
+        rule_number = match.group(1)
+        rule_description = match.group(2)
+        rules[rule_number] = rule_description
+    
+    return rules
+
+def validate_input(input_data_dict, rules):
+    """Validate multiple input data fields against the extracted rules."""
+    violations = {}
+    
+    for field, value in input_data_dict.items():
+        field_violations = []
+        for rule_number, rule_description in rules.items():
+            if re.search(rule_description, value, re.IGNORECASE):
+                field_violations.append((rule_number, rule_description))
+        
+        if field_violations:
+            violations[field] = field_violations
+    
+    return violations
+
+# Example usage
+pdf_path = "rules.pdf"  # Provide the correct PDF file path
+pdf_text = extract_text_from_pdf(pdf_path)
+rules = extract_rules(pdf_text)
+
+# Sample input data (modify based on your requirement)
+input_data = {
+    "Customer ID": "12345",
+    "Invoice Amount": "$5000"
+}
+
+violations = validate_input(input_data, rules)
+
+if violations:
+    print("Rule violations found:")
+    for field, field_violations in violations.items():
+        print(f"- {field}:")
+        for rule_number, rule_description in field_violations:
+            print(f"  - Rule {rule_number}: {rule_description}")
+else:
+    print("No rule violations detected.")
