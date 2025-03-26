@@ -1,0 +1,7 @@
+Row Number,Field Name,MDRM,Allowable Values,Invalid Value
+1,City,CLCO9130,Free text (A-Z only).,Hyderabad12
+1,Country,CLCO9031,Use the 2-letter Country Code (ISO 3166-1 alpha-2).,India
+1,Zip Code,CLCO9220,US: 5-digit ZIP; International: country-specific postal code.,567834
+2,City,CLCO9130,Free text (A-Z only).,Bangalore3
+2,Country,CLCO9031,Use the 2-letter Country Code (ISO 3166-1 alpha-2).,India
+2,Zip Code,CLCO9220,US: 5-digit ZIP; International: country-specific postal code.,345678
